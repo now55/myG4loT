@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>แสดงสถานะ</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h2 {
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    #status {
+      font-size: 48px;
+      font-weight: bold;
+      padding: 20px 60px;
+      border-radius: 20px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .status-on {
+      color: white;
+      background-color: #28a745;
+    }
+
+    .status-off {
+      color: white;
+      background-color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <h2>สถานะอุปกรณ์</h2>
+  <div id="status" class="status-off">กำลังโหลด...</div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD2QaoRMQBGI3M8VOASrRyZk3FVUnMsqvA",
+      authDomain: "myg4lot-aef90.firebaseapp.com",
+      projectId: "myg4lot-aef90",
+      storageBucket: "myg4lot-aef90.firebasestorage.app",
+      messagingSenderId: "514510851645",
+      appId: "1:514510851645:web:3af089c8893db963bc2454",
+      measurementId: "G-Q7N6PQBN0H"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const statusDiv = document.getElementById("status");
+
+    db.collection("devices").doc("device1")
+      .onSnapshot((doc) => {
+        if (doc.exists) {
+          const status = doc.data().status;
+          if (status === 1) {
+            statusDiv.textContent = "เปิด";
+            statusDiv.className = "status-on";
+          } else {
+            statusDiv.textContent = "ปิด";
+            statusDiv.className = "status-off";
+          }
+        } else {
+          statusDiv.textContent = "ไม่มีข้อมูล";
+          statusDiv.className = "status-off";
+        }
+      });
+  </script>
+</body>
+</html>
